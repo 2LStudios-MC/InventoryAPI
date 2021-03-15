@@ -1,4 +1,4 @@
-package dev._2lstudios.inventoryapi;
+package dev._2lstudios.inventoryapi.inventory;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -6,8 +6,8 @@ import java.util.Collections;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -22,7 +22,7 @@ public class InventoryUtil {
 
     // This type of inventory displays 28 items
     // Commonly used for stores with multiple pages
-    public InventoryWrapper createDisplayInventory(final String title, final InventoryHolder holder, int page,
+    public InventoryWrapper createDisplayInventory(final String title, final Player holder, int page,
             final String id, final Collection<ItemStack> items) {
         final Inventory inventory = server.createInventory(holder, 54, title);
         final InventoryWrapper inventoryWrapper = new InventoryWrapper(page, id, inventory);
@@ -44,18 +44,18 @@ public class InventoryUtil {
             }
         }
 
-        inventoryManager.add(inventory, inventoryWrapper);
+        inventoryManager.put(holder, inventoryWrapper);
 
         return inventoryWrapper;
     }
 
     // This is just an empty inventory
-    public InventoryWrapper createInventory(final String title, final InventoryHolder holder, int page,
+    public InventoryWrapper createInventory(final String title, final Player holder, int page,
             final String id) {
         final Inventory inventory = server.createInventory(holder, 54, title);
         final InventoryWrapper inventoryWrapper = new InventoryWrapper(page, id, inventory);
 
-        inventoryManager.add(inventory, inventoryWrapper);
+        inventoryManager.put(holder, inventoryWrapper);
 
         return inventoryWrapper;
     }

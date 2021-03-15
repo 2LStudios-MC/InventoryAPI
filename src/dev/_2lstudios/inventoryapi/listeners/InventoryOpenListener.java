@@ -8,39 +8,31 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 
-import dev._2lstudios.inventoryapi.InventoryManager;
-import dev._2lstudios.inventoryapi.InventoryPlayer;
-import dev._2lstudios.inventoryapi.InventoryPlayerManager;
-import dev._2lstudios.inventoryapi.InventoryWrapper;
+import dev._2lstudios.inventoryapi.inventory.InventoryManager;
+import dev._2lstudios.inventoryapi.inventory.InventoryWrapper;
 import dev._2lstudios.inventoryapi.events.InventoryAPIOpenEvent;
 
 public class InventoryOpenListener implements Listener {
-    private final InventoryPlayerManager inventoryPlayerManager;
     private final InventoryManager inventoryManager;
 
-    public InventoryOpenListener(final InventoryPlayerManager inventoryPlayerManager,
-            final InventoryManager inventoryManager) {
-        this.inventoryPlayerManager = inventoryPlayerManager;
+    public InventoryOpenListener(final InventoryManager inventoryManager) {
         this.inventoryManager = inventoryManager;
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onInventoryOpen(final InventoryOpenEvent event) {
-        final InventoryWrapper inventoryWrapper = inventoryManager.get(event.getInventory());
+        final HumanEntity whoClicked = event.getPlayer();
 
-        if (inventoryWrapper != null) {
-            final HumanEntity whoClicked = event.getPlayer();
+        if (whoClicked instanceof Player) {
+            final Player player = (Player) whoClicked;
+            final InventoryWrapper inventoryWrapper = inventoryManager.get(player);
 
-            if (whoClicked instanceof Player) {
-                final Player player = (Player) whoClicked;
-                final InventoryPlayer inventoryPlayer = inventoryPlayerManager.get(player);
+            if (inventoryWrapper != null) {
+                final InventoryAPIOpenEvent event1 = new InventoryAPIOpenEvent(event, player, inventoryWrapper);
 
-                if (inventoryPlayer != null) {
-                    final InventoryAPIOpenEvent inventoryAPIClickEvent = new InventoryAPIOpenEvent(event,
-                            inventoryPlayer, inventoryWrapper);
+                Bukkit.getPluginManager().callEvent(event1);
 
-                    Bukkit.getPluginManager().callEvent(inventoryAPIClickEvent);
-                }
+                event.setCancelled(event1.isCancelled());
             }
         }
     }

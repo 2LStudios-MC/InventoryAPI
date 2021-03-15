@@ -1,4 +1,4 @@
-package dev._2lstudios.inventoryapi;
+package dev._2lstudios.inventoryapi.inventory;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -8,7 +8,7 @@ public class InventoryWrapper {
     private final String id;
     private final Inventory inventory;
     
-    public InventoryWrapper(final int page, final String id, final Inventory inventory) {
+    InventoryWrapper(final int page, final String id, final Inventory inventory) {
         this.page = page;
         this.id = id;
         this.inventory = inventory;
