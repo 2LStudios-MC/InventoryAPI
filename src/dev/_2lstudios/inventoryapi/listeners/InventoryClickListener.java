@@ -21,8 +21,6 @@ public class InventoryClickListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onInventoryClick(final InventoryClickEvent event) {
-        event.setCancelled(true);
-
         final HumanEntity whoClicked = event.getWhoClicked();
 
         if (whoClicked instanceof Player) {
@@ -30,6 +28,8 @@ public class InventoryClickListener implements Listener {
             final InventoryWrapper inventoryWrapper = inventoryManager.get(player);
 
             if (inventoryWrapper != null) {
+                event.setCancelled(true);
+
                 final InventoryAPIClickEvent event1 = new InventoryAPIClickEvent(event, player,
                         inventoryWrapper);
 

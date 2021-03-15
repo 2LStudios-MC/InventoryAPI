@@ -26,6 +26,7 @@ public class InventoryUtil {
             final String id, final Collection<ItemStack> items) {
         final Inventory inventory = server.createInventory(holder, 54, title);
         final InventoryWrapper inventoryWrapper = new InventoryWrapper(page, id, inventory);
+        final int lastPage = 1 + ((items.size() - 1) / 28);
         // First 10 slots are skipped
         int slot = 10;
         int itemCount = 0;
@@ -43,6 +44,16 @@ public class InventoryUtil {
                 }
             }
         }
+
+        if (page != 1) {
+			inventoryWrapper.setItem(45, getBackItem(page - 1));
+		}
+
+		inventoryWrapper.setItem(49, getCloseItem());
+
+		if (page != lastPage) {
+			inventoryWrapper.setItem(53, getNextItem(page + 1));
+		}
 
         inventoryManager.put(holder, inventoryWrapper);
 
