@@ -1,0 +1,5 @@
+name: InventoryAPI
+main: dev._2lstudios.inventoryapi.InventoryAPI
+version: 0.0.1
+author: 2LS
+api-version: '1.13'
