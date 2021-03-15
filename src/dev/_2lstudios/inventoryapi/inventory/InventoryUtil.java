@@ -46,6 +46,8 @@ public class InventoryUtil {
 
         inventoryManager.put(holder, inventoryWrapper);
 
+        holder.openInventory(inventory);
+
         return inventoryWrapper;
     }
 
@@ -56,6 +58,8 @@ public class InventoryUtil {
         final InventoryWrapper inventoryWrapper = new InventoryWrapper(page, id, inventory);
 
         inventoryManager.put(holder, inventoryWrapper);
+
+        holder.openInventory(inventory);
 
         return inventoryWrapper;
     }
