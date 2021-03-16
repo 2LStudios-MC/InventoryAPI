@@ -24,7 +24,7 @@ public class InventoryUtil {
         final InventoryWrapper inventoryWrapper = inventoryManager.get(holder);
         final Inventory inventory = inventoryWrapper.getInventory();
 
-        if (inventory.getSize() == size) {
+        if (inventory != null && inventory.getSize() == size) {
             inventory.clear();
         }
 
