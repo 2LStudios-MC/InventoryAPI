@@ -22,10 +22,13 @@ public class InventoryUtil {
 
     Inventory getOrCreate(final Player holder, final int size, final String title) {
         final InventoryWrapper inventoryWrapper = inventoryManager.get(holder);
-        final Inventory inventory = inventoryWrapper.getInventory();
 
-        if (inventory != null && inventory.getSize() == size) {
-            inventory.clear();
+        if (inventoryWrapper != null) {
+            final Inventory inventory = inventoryWrapper.getInventory();
+
+            if (inventory != null && inventory.getSize() == size) {
+                inventory.clear();
+            }
         }
 
         return server.createInventory(holder, size, title);
