@@ -26,8 +26,10 @@ public class InventoryUtil {
         if (inventoryWrapper != null) {
             final Inventory inventory = inventoryWrapper.getInventory();
 
-            if (inventory != null && inventory.getSize() == size) {
+            if (inventory != null && title.equals(inventory.getTitle()) && inventory.getSize() == size) {
                 inventory.clear();
+
+                return inventory;
             }
         }
 
@@ -41,37 +43,43 @@ public class InventoryUtil {
         final Inventory inventory = getOrCreate(holder, 54, title);
         final InventoryWrapper inventoryWrapper = new InventoryWrapper(page, id, inventory);
         final int lastPage = 1 + ((items.size() - 1) / 28);
+        int skip = 28 * (page - 1);
         // First 10 slots are skipped
         int slot = 10;
         int itemCount = 0;
 
         for (final ItemStack item : items) {
+            if (skip-- > 0) {
+                continue;
+            }
+
             if (slot < 44) { // Slot 43 is the maximum we can populate
-                inventory.setItem(slot, item);
+                inventory.setItem(slot++, item);
                 itemCount++;
 
                 // We skip 3 slots when the row is filled
                 if (itemCount % 7 == 0) {
-                    slot += 3;
-                } else {
-                    slot++;
+                    slot += 2;
                 }
             }
         }
 
         if (page != 1) {
-            inventoryWrapper.setItem(45, getBackItem(page - 1));
+            inventoryWrapper.setItem(45, getBackItem(page));
         }
 
         inventoryWrapper.setItem(49, getCloseItem());
 
         if (page != lastPage) {
-            inventoryWrapper.setItem(53, getNextItem(page + 1));
+            inventoryWrapper.setItem(53, getNextItem(page));
+        }
+
+        if (holder.getOpenInventory() != inventory) {
+            holder.closeInventory();
+            holder.openInventory(inventory);
         }
 
         inventoryManager.put(holder, inventoryWrapper);
-
-        holder.openInventory(inventory);
 
         return inventoryWrapper;
     }
@@ -81,9 +89,12 @@ public class InventoryUtil {
         final Inventory inventory = getOrCreate(holder, 54, title);
         final InventoryWrapper inventoryWrapper = new InventoryWrapper(page, id, inventory);
 
-        inventoryManager.put(holder, inventoryWrapper);
+        if (holder.getOpenInventory() != inventory) {
+            holder.closeInventory();
+            holder.openInventory(inventory);
+        }
 
-        holder.openInventory(inventory);
+        inventoryManager.put(holder, inventoryWrapper);
 
         return inventoryWrapper;
     }
@@ -103,7 +114,7 @@ public class InventoryUtil {
         final ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName(ChatColor.GREEN + "Pagina Anterior");
-        meta.setLore(Collections.singletonList(ChatColor.YELLOW + "Pagina " + page));
+        meta.setLore(Collections.singletonList(ChatColor.YELLOW + "Pagina " + (page - 1)));
         item.setItemMeta(meta);
 
         return item;
@@ -114,7 +125,7 @@ public class InventoryUtil {
         final ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName(ChatColor.GREEN + "Pagina Posterior");
-        meta.setLore(Collections.singletonList(ChatColor.YELLOW + "Pagina " + page));
+        meta.setLore(Collections.singletonList(ChatColor.YELLOW + "Pagina " + (page + 1)));
         item.setItemMeta(meta);
 
         return item;
