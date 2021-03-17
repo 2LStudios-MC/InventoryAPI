@@ -20,7 +20,8 @@ public class InventoryUtil {
         this.server = server;
     }
 
-    Inventory getOrCreate(final Player holder, final int size, final String title) {
+    InventoryWrapper getOrCreate(final Player holder, final int size, final String title, final int page,
+            final String id) {
         final InventoryWrapper inventoryWrapper = inventoryManager.get(holder);
 
         if (inventoryWrapper != null) {
@@ -29,19 +30,21 @@ public class InventoryUtil {
             if (inventory != null && title.equals(inventory.getTitle()) && inventory.getSize() == size) {
                 inventory.clear();
 
-                return inventory;
+inventoryWrapper.setPage(page);
+
+                return inventoryWrapper;
             }
         }
 
-        return server.createInventory(holder, size, title);
+        return new InventoryWrapper(holder, page, id, server.createInventory(holder, size, title));
     }
 
     // This type of inventory displays 28 items
     // Commonly used for stores with multiple pages
     public InventoryWrapper createDisplayInventory(final String title, final Player holder, int page, final String id,
             final Collection<ItemStack> items) {
-        final Inventory inventory = getOrCreate(holder, 54, title);
-        final InventoryWrapper inventoryWrapper = new InventoryWrapper(page, id, inventory);
+        final InventoryWrapper inventoryWrapper = getOrCreate(holder, 54, title, page, id);
+        final Inventory inventory = inventoryWrapper.getInventory();
         final int lastPage = 1 + ((items.size() - 1) / 28);
         int skip = 28 * (page - 1);
         // First 10 slots are skipped
@@ -74,11 +77,7 @@ public class InventoryUtil {
             inventoryWrapper.setItem(53, getNextItem(page));
         }
 
-        if (holder.getOpenInventory() != inventory) {
-            holder.closeInventory();
-            holder.openInventory(inventory);
-        }
-
+        inventoryWrapper.openInventory();
         inventoryManager.put(holder, inventoryWrapper);
 
         return inventoryWrapper;
@@ -86,14 +85,9 @@ public class InventoryUtil {
 
     // This is just an empty inventory
     public InventoryWrapper createInventory(final String title, final Player holder, int page, final String id) {
-        final Inventory inventory = getOrCreate(holder, 54, title);
-        final InventoryWrapper inventoryWrapper = new InventoryWrapper(page, id, inventory);
+        final InventoryWrapper inventoryWrapper = getOrCreate(holder, 54, title, page, id);
 
-        if (holder.getOpenInventory() != inventory) {
-            holder.closeInventory();
-            holder.openInventory(inventory);
-        }
-
+        inventoryWrapper.openInventory();
         inventoryManager.put(holder, inventoryWrapper);
 
         return inventoryWrapper;
