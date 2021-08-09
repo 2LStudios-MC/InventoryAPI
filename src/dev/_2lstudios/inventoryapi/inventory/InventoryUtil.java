@@ -30,7 +30,7 @@ public class InventoryUtil {
             if (inventory != null && title.equals(inventory.getTitle()) && inventory.getSize() == size) {
                 inventory.clear();
 
-inventoryWrapper.setPage(page);
+                inventoryWrapper.setPage(page);
 
                 return inventoryWrapper;
             }
