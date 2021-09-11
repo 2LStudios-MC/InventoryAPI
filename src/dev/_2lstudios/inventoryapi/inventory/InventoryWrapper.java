@@ -12,7 +12,7 @@ public class InventoryWrapper {
     private InventoryWrapper lastInventory;
     private int page;
     
-    InventoryWrapper(final Player holder, final int page, final String id, final Inventory inventory) {
+    public InventoryWrapper(final Player holder, final int page, final String id, final Inventory inventory) {
         this.holder = holder;
         this.page = page;
         this.id = id;

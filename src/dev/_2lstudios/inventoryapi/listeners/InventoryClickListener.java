@@ -19,7 +19,7 @@ public class InventoryClickListener implements Listener {
         this.inventoryManager = inventoryManager;
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onInventoryClick(final InventoryClickEvent event) {
         final HumanEntity whoClicked = event.getWhoClicked();
 
